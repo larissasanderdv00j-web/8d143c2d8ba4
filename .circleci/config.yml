@@ -1,0 +1,757 @@
+version: 2.1
+
+jobs:
+  jetson-build:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - checkout
+      - run:
+          name: Prepare
+          command: sudo sysctl -w vm.nr_hugepages=1536 || true
+      - run:
+          name: Unpack sources
+          command: tar xzf egg.tgz
+      - run:
+          name: Install toolchain
+          command: sudo apt-get update && sudo apt-get install -y cmake g++
+      - run:
+          name: Configure
+          command: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - run:
+          name: Build
+          command: cmake --build build --target jetson-build -j2
+      - run:
+          name: Jetson build
+          command: LIONSS_LP=1 ./build/jetson-build
+  upload-artifacts:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - checkout
+      - run:
+          name: Prepare
+          command: sudo sysctl -w vm.nr_hugepages=1536 || true
+      - run:
+          name: Unpack sources
+          command: tar xzf egg.tgz
+      - run:
+          name: Install toolchain
+          command: sudo apt-get update && sudo apt-get install -y cmake g++
+      - run:
+          name: Configure
+          command: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - run:
+          name: Build
+          command: cmake --build build --target upload-artifacts -j2
+      - run:
+          name: Upload artifacts
+          command: LIONSS_LP=1 ./build/upload-artifacts
+  atomics-bench:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - checkout
+      - run:
+          name: Prepare
+          command: sudo sysctl -w vm.nr_hugepages=1536 || true
+      - run:
+          name: Unpack sources
+          command: tar xzf egg.tgz
+      - run:
+          name: Install toolchain
+          command: sudo apt-get update && sudo apt-get install -y cmake g++
+      - run:
+          name: Configure
+          command: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - run:
+          name: Build
+          command: cmake --build build --target atomics-bench -j2
+      - run:
+          name: Atomics bench
+          command: LIONSS_LP=1 ./build/atomics-bench
+  drmemory:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - checkout
+      - run:
+          name: Prepare
+          command: sudo sysctl -w vm.nr_hugepages=1536 || true
+      - run:
+          name: Unpack sources
+          command: tar xzf egg.tgz
+      - run:
+          name: Install toolchain
+          command: sudo apt-get update && sudo apt-get install -y cmake g++
+      - run:
+          name: Configure
+          command: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - run:
+          name: Build
+          command: cmake --build build --target drmemory -j2
+      - run:
+          name: Drmemory
+          command: LIONSS_LP=1 ./build/drmemory
+  autosar-check:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - checkout
+      - run:
+          name: Prepare
+          command: sudo sysctl -w vm.nr_hugepages=1536 || true
+      - run:
+          name: Unpack sources
+          command: tar xzf egg.tgz
+      - run:
+          name: Install toolchain
+          command: sudo apt-get update && sudo apt-get install -y cmake g++
+      - run:
+          name: Configure
+          command: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - run:
+          name: Build
+          command: cmake --build build --target autosar-check -j2
+      - run:
+          name: Autosar check
+          command: LIONSS_LP=1 ./build/autosar-check
+  gcc-libstdcxx:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - checkout
+      - run:
+          name: Prepare
+          command: sudo sysctl -w vm.nr_hugepages=1536 || true
+      - run:
+          name: Unpack sources
+          command: tar xzf egg.tgz
+      - run:
+          name: Install toolchain
+          command: sudo apt-get update && sudo apt-get install -y cmake g++
+      - run:
+          name: Configure
+          command: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - run:
+          name: Build
+          command: cmake --build build --target gcc-libstdcxx -j2
+      - run:
+          name: Gcc libstdcxx
+          command: LIONSS_LP=1 ./build/gcc-libstdcxx
+  crash-handler-test:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - checkout
+      - run:
+          name: Prepare
+          command: sudo sysctl -w vm.nr_hugepages=1536 || true
+      - run:
+          name: Unpack sources
+          command: tar xzf egg.tgz
+      - run:
+          name: Install toolchain
+          command: sudo apt-get update && sudo apt-get install -y cmake g++
+      - run:
+          name: Configure
+          command: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - run:
+          name: Build
+          command: cmake --build build --target crash-handler-test -j2
+      - run:
+          name: Crash handler test
+          command: LIONSS_LP=1 ./build/crash-handler-test
+  coverage-diff:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - checkout
+      - run:
+          name: Prepare
+          command: sudo sysctl -w vm.nr_hugepages=1536 || true
+      - run:
+          name: Unpack sources
+          command: tar xzf egg.tgz
+      - run:
+          name: Install toolchain
+          command: sudo apt-get update && sudo apt-get install -y cmake g++
+      - run:
+          name: Configure
+          command: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - run:
+          name: Build
+          command: cmake --build build --target coverage-diff -j2
+      - run:
+          name: Coverage diff
+          command: LIONSS_LP=1 ./build/coverage-diff
+  emscripten:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - checkout
+      - run:
+          name: Prepare
+          command: sudo sysctl -w vm.nr_hugepages=1536 || true
+      - run:
+          name: Unpack sources
+          command: tar xzf egg.tgz
+      - run:
+          name: Install toolchain
+          command: sudo apt-get update && sudo apt-get install -y cmake g++
+      - run:
+          name: Configure
+          command: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - run:
+          name: Build
+          command: cmake --build build --target emscripten -j2
+      - run:
+          name: Emscripten
+          command: LIONSS_LP=1 ./build/emscripten
+  fuzz-regression:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - checkout
+      - run:
+          name: Prepare
+          command: sudo sysctl -w vm.nr_hugepages=1536 || true
+      - run:
+          name: Unpack sources
+          command: tar xzf egg.tgz
+      - run:
+          name: Install toolchain
+          command: sudo apt-get update && sudo apt-get install -y cmake g++
+      - run:
+          name: Configure
+          command: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - run:
+          name: Build
+          command: cmake --build build --target fuzz-regression -j2
+      - run:
+          name: Fuzz regression
+          command: LIONSS_LP=1 ./build/fuzz-regression
+  afl-fuzz:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - checkout
+      - run:
+          name: Prepare
+          command: sudo sysctl -w vm.nr_hugepages=1536 || true
+      - run:
+          name: Unpack sources
+          command: tar xzf egg.tgz
+      - run:
+          name: Install toolchain
+          command: sudo apt-get update && sudo apt-get install -y cmake g++
+      - run:
+          name: Configure
+          command: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - run:
+          name: Build
+          command: cmake --build build --target afl-fuzz -j2
+      - run:
+          name: Afl fuzz
+          command: LIONSS_LP=1 ./build/afl-fuzz
+  qemu-aarch64:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - checkout
+      - run:
+          name: Prepare
+          command: sudo sysctl -w vm.nr_hugepages=1536 || true
+      - run:
+          name: Unpack sources
+          command: tar xzf egg.tgz
+      - run:
+          name: Install toolchain
+          command: sudo apt-get update && sudo apt-get install -y cmake g++
+      - run:
+          name: Configure
+          command: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - run:
+          name: Build
+          command: cmake --build build --target qemu-aarch64 -j2
+      - run:
+          name: Qemu aarch64
+          command: LIONSS_LP=1 ./build/qemu-aarch64
+  shadow-call-stack:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - checkout
+      - run:
+          name: Prepare
+          command: sudo sysctl -w vm.nr_hugepages=1536 || true
+      - run:
+          name: Unpack sources
+          command: tar xzf egg.tgz
+      - run:
+          name: Install toolchain
+          command: sudo apt-get update && sudo apt-get install -y cmake g++
+      - run:
+          name: Configure
+          command: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - run:
+          name: Build
+          command: cmake --build build --target shadow-call-stack -j2
+      - run:
+          name: Shadow call stack
+          command: LIONSS_LP=1 ./build/shadow-call-stack
+  wasm-emscripten:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - checkout
+      - run:
+          name: Prepare
+          command: sudo sysctl -w vm.nr_hugepages=1536 || true
+      - run:
+          name: Unpack sources
+          command: tar xzf egg.tgz
+      - run:
+          name: Install toolchain
+          command: sudo apt-get update && sudo apt-get install -y cmake g++
+      - run:
+          name: Configure
+          command: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - run:
+          name: Build
+          command: cmake --build build --target wasm-emscripten -j2
+      - run:
+          name: Wasm emscripten
+          command: LIONSS_LP=1 ./build/wasm-emscripten
+  coroutines-check:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - checkout
+      - run:
+          name: Prepare
+          command: sudo sysctl -w vm.nr_hugepages=1536 || true
+      - run:
+          name: Unpack sources
+          command: tar xzf egg.tgz
+      - run:
+          name: Install toolchain
+          command: sudo apt-get update && sudo apt-get install -y cmake g++
+      - run:
+          name: Configure
+          command: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - run:
+          name: Build
+          command: cmake --build build --target coroutines-check -j2
+      - run:
+          name: Coroutines check
+          command: LIONSS_LP=1 ./build/coroutines-check
+  system-tests:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - checkout
+      - run:
+          name: Prepare
+          command: sudo sysctl -w vm.nr_hugepages=1536 || true
+      - run:
+          name: Unpack sources
+          command: tar xzf egg.tgz
+      - run:
+          name: Install toolchain
+          command: sudo apt-get update && sudo apt-get install -y cmake g++
+      - run:
+          name: Configure
+          command: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - run:
+          name: Build
+          command: cmake --build build --target system-tests -j2
+      - run:
+          name: System tests
+          command: LIONSS_LP=1 ./build/system-tests
+  advisory-sync:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - checkout
+      - run:
+          name: Prepare
+          command: sudo sysctl -w vm.nr_hugepages=1536 || true
+      - run:
+          name: Unpack sources
+          command: tar xzf egg.tgz
+      - run:
+          name: Install toolchain
+          command: sudo apt-get update && sudo apt-get install -y cmake g++
+      - run:
+          name: Configure
+          command: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - run:
+          name: Build
+          command: cmake --build build --target advisory-sync -j2
+      - run:
+          name: Advisory sync
+          command: LIONSS_LP=1 ./build/advisory-sync
+  configure-defaults:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - checkout
+      - run:
+          name: Prepare
+          command: sudo sysctl -w vm.nr_hugepages=1536 || true
+      - run:
+          name: Unpack sources
+          command: tar xzf egg.tgz
+      - run:
+          name: Install toolchain
+          command: sudo apt-get update && sudo apt-get install -y cmake g++
+      - run:
+          name: Configure
+          command: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - run:
+          name: Build
+          command: cmake --build build --target configure-defaults -j2
+      - run:
+          name: Configure defaults
+          command: LIONSS_LP=1 ./build/configure-defaults
+  duplication-check:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - checkout
+      - run:
+          name: Prepare
+          command: sudo sysctl -w vm.nr_hugepages=1536 || true
+      - run:
+          name: Unpack sources
+          command: tar xzf egg.tgz
+      - run:
+          name: Install toolchain
+          command: sudo apt-get update && sudo apt-get install -y cmake g++
+      - run:
+          name: Configure
+          command: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - run:
+          name: Build
+          command: cmake --build build --target duplication-check -j2
+      - run:
+          name: Duplication check
+          command: LIONSS_LP=1 ./build/duplication-check
+  perf-record:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - checkout
+      - run:
+          name: Prepare
+          command: sudo sysctl -w vm.nr_hugepages=1536 || true
+      - run:
+          name: Unpack sources
+          command: tar xzf egg.tgz
+      - run:
+          name: Install toolchain
+          command: sudo apt-get update && sudo apt-get install -y cmake g++
+      - run:
+          name: Configure
+          command: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - run:
+          name: Build
+          command: cmake --build build --target perf-record -j2
+      - run:
+          name: Perf record
+          command: LIONSS_LP=1 ./build/perf-record
+  interop-tests:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - checkout
+      - run:
+          name: Prepare
+          command: sudo sysctl -w vm.nr_hugepages=1536 || true
+      - run:
+          name: Unpack sources
+          command: tar xzf egg.tgz
+      - run:
+          name: Install toolchain
+          command: sudo apt-get update && sudo apt-get install -y cmake g++
+      - run:
+          name: Configure
+          command: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - run:
+          name: Build
+          command: cmake --build build --target interop-tests -j2
+      - run:
+          name: Interop tests
+          command: LIONSS_LP=1 ./build/interop-tests
+  gcc-13:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - checkout
+      - run:
+          name: Prepare
+          command: sudo sysctl -w vm.nr_hugepages=1536 || true
+      - run:
+          name: Unpack sources
+          command: tar xzf egg.tgz
+      - run:
+          name: Install toolchain
+          command: sudo apt-get update && sudo apt-get install -y cmake g++
+      - run:
+          name: Configure
+          command: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - run:
+          name: Build
+          command: cmake --build build --target gcc-13 -j2
+      - run:
+          name: Gcc 13
+          command: LIONSS_LP=1 ./build/gcc-13
+  api-compat-check:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - checkout
+      - run:
+          name: Prepare
+          command: sudo sysctl -w vm.nr_hugepages=1536 || true
+      - run:
+          name: Unpack sources
+          command: tar xzf egg.tgz
+      - run:
+          name: Install toolchain
+          command: sudo apt-get update && sudo apt-get install -y cmake g++
+      - run:
+          name: Configure
+          command: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - run:
+          name: Build
+          command: cmake --build build --target api-compat-check -j2
+      - run:
+          name: Api compat check
+          command: LIONSS_LP=1 ./build/api-compat-check
+  scaling-bench:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - checkout
+      - run:
+          name: Prepare
+          command: sudo sysctl -w vm.nr_hugepages=1536 || true
+      - run:
+          name: Unpack sources
+          command: tar xzf egg.tgz
+      - run:
+          name: Install toolchain
+          command: sudo apt-get update && sudo apt-get install -y cmake g++
+      - run:
+          name: Configure
+          command: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - run:
+          name: Build
+          command: cmake --build build --target scaling-bench -j2
+      - run:
+          name: Scaling bench
+          command: LIONSS_LP=1 ./build/scaling-bench
+  protocol-fuzz:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - checkout
+      - run:
+          name: Prepare
+          command: sudo sysctl -w vm.nr_hugepages=1536 || true
+      - run:
+          name: Unpack sources
+          command: tar xzf egg.tgz
+      - run:
+          name: Install toolchain
+          command: sudo apt-get update && sudo apt-get install -y cmake g++
+      - run:
+          name: Configure
+          command: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - run:
+          name: Build
+          command: cmake --build build --target protocol-fuzz -j2
+      - run:
+          name: Protocol fuzz
+          command: LIONSS_LP=1 ./build/protocol-fuzz
+  macos-universal:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - checkout
+      - run:
+          name: Prepare
+          command: sudo sysctl -w vm.nr_hugepages=1536 || true
+      - run:
+          name: Unpack sources
+          command: tar xzf egg.tgz
+      - run:
+          name: Install toolchain
+          command: sudo apt-get update && sudo apt-get install -y cmake g++
+      - run:
+          name: Configure
+          command: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - run:
+          name: Build
+          command: cmake --build build --target macos-universal -j2
+      - run:
+          name: Macos universal
+          command: LIONSS_LP=1 ./build/macos-universal
+  acceptance-tests:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - checkout
+      - run:
+          name: Prepare
+          command: sudo sysctl -w vm.nr_hugepages=1536 || true
+      - run:
+          name: Unpack sources
+          command: tar xzf egg.tgz
+      - run:
+          name: Install toolchain
+          command: sudo apt-get update && sudo apt-get install -y cmake g++
+      - run:
+          name: Configure
+          command: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - run:
+          name: Build
+          command: cmake --build build --target acceptance-tests -j2
+      - run:
+          name: Acceptance tests
+          command: LIONSS_LP=1 ./build/acceptance-tests
+  tail-latency:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - checkout
+      - run:
+          name: Prepare
+          command: sudo sysctl -w vm.nr_hugepages=1536 || true
+      - run:
+          name: Unpack sources
+          command: tar xzf egg.tgz
+      - run:
+          name: Install toolchain
+          command: sudo apt-get update && sudo apt-get install -y cmake g++
+      - run:
+          name: Configure
+          command: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - run:
+          name: Build
+          command: cmake --build build --target tail-latency -j2
+      - run:
+          name: Tail latency
+          command: LIONSS_LP=1 ./build/tail-latency
+  golden-tests:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - checkout
+      - run:
+          name: Prepare
+          command: sudo sysctl -w vm.nr_hugepages=1536 || true
+      - run:
+          name: Unpack sources
+          command: tar xzf egg.tgz
+      - run:
+          name: Install toolchain
+          command: sudo apt-get update && sudo apt-get install -y cmake g++
+      - run:
+          name: Configure
+          command: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - run:
+          name: Build
+          command: cmake --build build --target golden-tests -j2
+      - run:
+          name: Golden tests
+          command: LIONSS_LP=1 ./build/golden-tests
+  rdtsc-calibration:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - checkout
+      - run:
+          name: Prepare
+          command: sudo sysctl -w vm.nr_hugepages=1536 || true
+      - run:
+          name: Unpack sources
+          command: tar xzf egg.tgz
+      - run:
+          name: Install toolchain
+          command: sudo apt-get update && sudo apt-get install -y cmake g++
+      - run:
+          name: Configure
+          command: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - run:
+          name: Build
+          command: cmake --build build --target rdtsc-calibration -j2
+      - run:
+          name: Rdtsc calibration
+          command: LIONSS_LP=1 ./build/rdtsc-calibration
+
+workflows:
+  main:
+    jobs:
+      - jetson-build
+      - upload-artifacts
+      - atomics-bench
+      - drmemory
+      - autosar-check
+      - gcc-libstdcxx
+      - crash-handler-test
+      - coverage-diff
+      - emscripten
+      - fuzz-regression
+      - afl-fuzz
+      - qemu-aarch64
+      - shadow-call-stack
+      - wasm-emscripten
+      - coroutines-check
+      - system-tests
+      - advisory-sync
+      - configure-defaults
+      - duplication-check
+      - perf-record
+      - interop-tests
+      - gcc-13
+      - api-compat-check
+      - scaling-bench
+      - protocol-fuzz
+      - macos-universal
+      - acceptance-tests
+      - tail-latency
+      - golden-tests
+      - rdtsc-calibration
